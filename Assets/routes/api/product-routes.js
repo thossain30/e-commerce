@@ -8,7 +8,20 @@ const { Product, Category, Tag, ProductTag } = require('../../models');
 router.get('/', (req, res) => {
   // find all products
   // be sure to include its associated Category and Tag data
-  Product.findAll().then((productData) => {
+  Product.findAll({
+    attributes: ["id", "product_name", "price", "stock", "category_id"],
+    include: [
+      {
+        model: Category,
+        attributes: ["id", "category_name"]
+      }, 
+      {
+        model: Tag,
+        attributes: ["id", "tag_name"],
+        through: ProductTag
+      }
+    ]
+  }).then((productData) => {
     res.json(productData);
   });
 });
@@ -18,7 +31,19 @@ router.get('/:id', (req, res) => {
   // find a single product by its `id`
   // be sure to include its associated Category and Tag data
 
-  Product.findByPk(req.params.id).then((productData) => {
+  Product.findByPk(req.params.id, {
+    include: [
+      {
+        model: Category,
+        attributes: ["id", "category_name"]
+      },
+      {
+        model: Tag,
+        attributes: ["id", 'tag_name'],
+        through: ProductTag
+      }
+  ]
+  }).then((productData) => {
     res.json(productData);
   });
 });
@@ -101,11 +126,11 @@ router.delete('/:id', (req, res) => {
   // delete one product by its `id` value
   Product.destroy({
     where : {
-      product_id:req.params.id,
+      product_id: req.params.id,
     },
-  }).
-    then((deletedProduct) => {
-      res.json(deletedProduct);
+  })
+  .then((deletedProduct) => {
+      res.json(`${deletedProduct} was removed from the database`);
     }).
     catch((err) => res.json(err));
 });
