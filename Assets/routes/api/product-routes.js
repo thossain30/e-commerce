@@ -22,8 +22,10 @@ router.get('/', (req, res) => {
       }
     ]
   }).then((productData) => {
-    res.json(productData);
-  });
+    res.status(200).json(productData);
+  }).catch((err) => {
+    res.status(400).json(err);
+  })
 });
 
 // get one product
@@ -126,7 +128,7 @@ router.delete('/:id', (req, res) => {
   // delete one product by its `id` value
   Product.destroy({
     where : {
-      product_id: req.params.id,
+      id: req.params.id,
     },
   })
   .then((deletedProduct) => {
