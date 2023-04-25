@@ -20,6 +20,7 @@
     "nodemon": "^2.0.3"
   },
   "dependencies": {
+    "@types/sequelize": "^4.28.14",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "mysql2": "^2.1.0",
